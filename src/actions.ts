@@ -22,7 +22,9 @@ type GetAgentKitActionsParams = {
 /**
  * Get all AgentKit actions
  */
-export async function getAgentKitActions(): Promise<Action[]> {
+export async function getAgentKitActions({
+    getClient,
+}: GetAgentKitActionsParams): Promise<Action[]> {
     const agentkit = await getClient();
     const cdpToolkit = new CdpToolkit(agentkit);
     const tools = cdpToolkit.getTools();
