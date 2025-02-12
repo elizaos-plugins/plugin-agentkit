@@ -2,9 +2,9 @@
 import { CdpAgentkit } from "@coinbase/cdp-agentkit-core";
 import * as fs from "node:fs";
 var WALLET_DATA_FILE = "wallet_data.txt";
-async function getClient() {
-  const apiKeyName = process.env.CDP_API_KEY_NAME;
-  const apiKeyPrivateKey = process.env.CDP_API_KEY_PRIVATE_KEY;
+async function getClient(_runtime) {
+  const apiKeyName = _runtime.getSetting("CDP_API_KEY_NAME");
+  const apiKeyPrivateKey = _runtime.getSetting("CDP_API_KEY_PRIVATE_KEY");
   if (!apiKeyName || !apiKeyPrivateKey) {
     throw new Error("Missing required CDP API credentials. Please set CDP_API_KEY_NAME and CDP_API_KEY_PRIVATE_KEY environment variables.");
   }
@@ -18,7 +18,7 @@ async function getClient() {
   }
   const config = {
     cdpWalletData: walletDataStr || void 0,
-    networkId: process.env.CDP_AGENT_KIT_NETWORK || "base-sepolia",
+    networkId: _runtime.getSetting("CDP_AGENT_KIT_NETWORK") || "base-sepolia",
     apiKeyName,
     apiKeyPrivateKey
   };
@@ -35,7 +35,7 @@ async function getClient() {
 var walletProvider = {
   async get(_runtime) {
     try {
-      const client = await getClient();
+      const client = await getClient(_runtime);
       const address = client.wallet.addresses[0].id;
       return `AgentKit Wallet Address: ${address}`;
     } catch (error) {
